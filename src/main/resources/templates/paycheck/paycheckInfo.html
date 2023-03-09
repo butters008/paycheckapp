@@ -35,7 +35,7 @@
     <label for="paycheckName">Paycheck Name</label>
     <input type="text" name="paycheckName" id="paycheckName" th:value="${paycheck.paycheckName}">
     <label for="paycheckAmount">Paycheck Amount</label>
-    <input type="number" name="paycheckAmount" id="paycheckAmount" th:value="${paycheck.paycheckAmount}">
+    <input type="number" name="paycheckAmount" id="paycheckAmount" th:value="${paycheck.paycheckAmount}" step="0.01">
     <label for="paycheckDate">Paycheck Date</label>
     <input type="date" name="paycheckDate" id="paycheckDate" th:value="${paycheck.paycheckDate}">
     <label for="dayName">Name of Day</label>

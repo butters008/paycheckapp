@@ -26,7 +26,7 @@ public class Paycheck {
     private String paycheckName;
 
     @Column(name = "paycheck_amount")
-    private Integer paycheckAmount;
+    private Float paycheckAmount;
 
     @Column(name = "paycheck_date")
     private LocalDate paycheckDate;
