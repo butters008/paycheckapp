@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{header :: myHead}"></head>
+<body>
+<style>
+  .dayDisplayContainer{
+    display: flex;
+    align-content: baseline;
+    justify-content: space-between;
+    flex-direction: row;
+
+
+  }
+  .dayContainer{
+    width: 100px;
+    height: 125px;
+    border: 1px solid black;
+    background-color: bisque;
+
+    display: flex;
+  }
+
+  .daysOfCheck{
+    display: flex;
+
+  }
+</style>
+
+<h2>Paycheck Info Page</h2>
+<a href="../paycheck/list">list check</a>
+<div>
+  <h3>Paycheck Information</h3>
+  <form action="saveCheck" method="post">
+    <input type="text" name="id" id="id" th:value="${paycheck.id}">
+    <label for="paycheckName">Paycheck Name</label>
+    <input type="text" name="paycheckName" id="paycheckName" th:value="${paycheck.paycheckName}">
+    <label for="paycheckAmount">Paycheck Amount</label>
+    <input type="number" name="paycheckAmount" id="paycheckAmount" th:value="${paycheck.paycheckAmount}">
+    <label for="paycheckDate">Paycheck Date</label>
+    <input type="date" name="paycheckDate" id="paycheckDate" th:value="${paycheck.paycheckDate}">
+    <label for="dayName">Name of Day</label>
+    <input type="text" name="dayName" id="dayName" th:value="${paycheck.dayName}">
+    <label for="daysBetweenCheck">Days Between Check</label>
+    <input type="number" name="daysBetweenCheck" id="daysBetweenCheck" th:value="${paycheck.daysBetweenCheck}" >
+    <button type="submit">Save</button>
+  </form>
+</div>
+
+<!--
+Think and plan more about how the days will appear on screen before continuing
+Right now I am on a road block with this feature, and it is not part of the MVP -
+more of a gold-foiling.
+-->
+<!--<div class="dayDisplayContainer">-->
+<!--  <div class="daysOfCheck">-->
+<!--    <div th:each="day : ${#numbers.sequence( 1, paycheck.daysBetweenCheck.intValue(), 1)}">-->
+<!--      <div class="dayContainer">-->
+<!--        <div th:text="${paycheck.dayName}"></div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<div id="transactionForm">
+
+</div>
+
+</body>
+</html>

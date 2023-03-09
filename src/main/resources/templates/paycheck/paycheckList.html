@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:replace="~{header :: myHead}"></div>
+<head th:replace="~{header :: myHead}">
 </head>
 <body>
 <h2>Hello from the list</h2>
@@ -9,6 +8,7 @@
   <table>
     <thead>
         <tr>
+            <th>Edit</th>
             <th>Paycheck Name</th>
             <th>Paycheck Amount</th>
             <th>Paycheck Date</th>
@@ -17,6 +17,8 @@
     </thead>
     <tbody>
       <tr th:each="paycheck : ${paycheckList}">
+<!--          <td><a th:href="@{../index/{id} (id = ${paycheck.id})}"><button></button></a> </td>-->
+          <td><a th:href="@{../paycheck/{id} (id = ${paycheck.id})}"><button></button></a> </td>
           <td th:text="${paycheck.paycheckName}"/>
           <td th:text="${paycheck.paycheckAmount}"/>
           <td th:text="${paycheck.paycheckDate}"/>
