@@ -17,7 +17,7 @@ public class PaycheckFormBean {
     //    @NotEmpty(message = "Cannot be blank")
     private String paycheckName;
 
-    private Integer paycheckAmount;
+    private Float paycheckAmount;
 
     private LocalDate paycheckDate;
 
