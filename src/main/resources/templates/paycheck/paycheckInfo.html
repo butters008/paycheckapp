@@ -62,7 +62,21 @@ more of a gold-foiling.
 <!--</div>-->
 
 <div id="transactionForm">
-
+  <h3>Transaction Information</h3>
+  <form th:action="@{{id}/transaction/submit (id = ${paycheck.id})}" method="post">
+    <input type="text" name="id"  th:value="${paycheck.id}">
+    <label for="transactionName">Transaction Name</label>
+    <input type="text" name="transactionName" id="transactionName" >
+    <label for="transactionAmount">Transaction Amount</label>
+    <input type="number" name="transactionAmount" id="transactionAmount"  step="0.01">
+    <label for="transactionDate">Transaction Date</label>
+    <input type="date" name="transactionDate" id="transactionDate" >
+    <label for="recurring">Recurring</label>
+    <input type="text" name="recurring" id="recurring" >
+    <label for="note">Note</label>
+    <input type="text" name="note" id="note" >
+    <button type="submit">Save</button>
+</form>
 </div>
 
 </body>
