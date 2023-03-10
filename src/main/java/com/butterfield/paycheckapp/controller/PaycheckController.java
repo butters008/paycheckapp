@@ -1,7 +1,11 @@
 package com.butterfield.paycheckapp.controller;
 
 import com.butterfield.paycheckapp.database.dao.PaycheckDAO;
+import com.butterfield.paycheckapp.database.dao.PaycheckTransactionDAO;
+import com.butterfield.paycheckapp.database.dao.TransactionDAO;
 import com.butterfield.paycheckapp.database.entity.Paycheck;
+import com.butterfield.paycheckapp.database.entity.PaycheckTransaction;
+import com.butterfield.paycheckapp.database.entity.Transaction;
 import com.butterfield.paycheckapp.formBean.PaycheckFormBean;
 import com.butterfield.paycheckapp.service.PaycheckService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +27,12 @@ public class PaycheckController {
     private PaycheckDAO paycheckDAO;
 
     @Autowired
+    private TransactionDAO transactionDAO;
+
+    @Autowired
+    private PaycheckTransactionDAO paycheckTransactionDAO;
+
+    @Autowired
     private PaycheckService paycheckService = new PaycheckService();
 
     @RequestMapping(value="paycheck/paycheck", method = RequestMethod.GET)
@@ -37,7 +47,7 @@ public class PaycheckController {
         ModelAndView response = new ModelAndView();
 
         List<Paycheck> paychecks = paycheckDAO.findAll();
-        System.out.print(paychecks.stream().toList());
+//        System.out.print(paychecks.stream().toList());
         response.addObject("paycheckList", paychecks);
 
         response.setViewName("paycheck/paycheckList");
@@ -77,7 +87,12 @@ public class PaycheckController {
             log.debug("No check!");
         }else{
             paycheck = paycheckDAO.findById(id);
+            List<PaycheckTransaction> paycheckTransactionList =  paycheckTransactionDAO.findAllByPaycheckId(paycheck);;
+//            paycheckTransactionList =
+            log.debug(paycheckTransactionList.toString());
+            response.addObject("transactionList", paycheckTransactionList);
         }
+
 
         response.addObject("paycheck", paycheck);
         response.setViewName("paycheck/paycheckInfo");

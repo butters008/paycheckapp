@@ -64,13 +64,13 @@ more of a gold-foiling.
 <div id="transactionForm">
   <h3>Transaction Information</h3>
   <form th:action="@{{id}/transaction/submit (id = ${paycheck.id})}" method="post">
-    <input type="text" name="id"  th:value="${paycheck.id}">
+<!--    <input type="text" name="aid"  th:value="${paycheck.id}">-->
     <label for="transactionName">Transaction Name</label>
-    <input type="text" name="transactionName" id="transactionName" >
+    <input type="text" name="name" id="transactionName" >
     <label for="transactionAmount">Transaction Amount</label>
-    <input type="number" name="transactionAmount" id="transactionAmount"  step="0.01">
+    <input type="number" name="amount" id="transactionAmount"  step="0.01">
     <label for="transactionDate">Transaction Date</label>
-    <input type="date" name="transactionDate" id="transactionDate" >
+    <input type="date" name="date" id="transactionDate" >
     <label for="recurring">Recurring</label>
     <input type="text" name="recurring" id="recurring" >
     <label for="note">Note</label>
@@ -78,6 +78,16 @@ more of a gold-foiling.
     <button type="submit">Save</button>
 </form>
 </div>
-
+<div>
+    <table>
+        <tbody>
+            <tr th:each="transaction: ${transactionList}">
+                <td th:text="${transaction.getTransactionId().getName()}"/>
+                <td th:text="${transaction.getTransactionId().getAmount()}"/>
+                <td th:text="${transaction.getTransactionId().getDate()}"/>
+            </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

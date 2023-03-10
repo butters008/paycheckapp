@@ -29,13 +29,17 @@ public class TransactionController {
     @Autowired
     private PaycheckTransactionDAO paycheckTransactionDAO;
 
-    @RequestMapping(value="{aID}/transaction/submit", method = {RequestMethod.POST, RequestMethod.GET})
+    @RequestMapping(value="paycheck/{aID}/transaction/submit", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView submitTransaction(@Valid TransactionFormBean form, @PathVariable("aID") Integer id) throws Exception {
         ModelAndView response = new ModelAndView();
 
         Transaction transaction = null;
+        log.debug("Incoming Form " + form.toString());
 
-        if (form.getId() == null) {
+        if (transactionDAO.findById(form.getId()) == null) {
+
+            log.debug("Creating a new transaction");
+
             //Create new transaction and new paycheck_transaction
             transaction = new Transaction();
             transaction.setName(form.getName());
@@ -47,13 +51,16 @@ public class TransactionController {
             PaycheckTransaction paycheckTransaction = new PaycheckTransaction();
             paycheckTransaction.setPaycheckId(paycheck);
             paycheckTransaction.setTransactionId(transaction);
-
+            transactionDAO.save(transaction);
             log.debug("transaction "+ transaction);
             log.debug("paycheck "+ paycheck);
             log.debug("paycheckTransaction "+ paycheckTransaction);
             paycheckTransactionDAO.save(paycheckTransaction);
         }
         else {
+
+            log.debug("Updating a transaction");
+
             //Update the transaction
             transaction = transactionDAO.findById(form.getId());
             transaction.setName(form.getName());
@@ -61,11 +68,12 @@ public class TransactionController {
             transaction.setDate(form.getDate());
             transaction.setRecurring(form.getRecurring());
             transaction.setNote(form.getNote());
+            transactionDAO.save(transaction);
         }
-        transactionDAO.save(transaction);
 
 
-        response.setViewName("redirect: ../paycheck/" + id);
+
+        response.setViewName("redirect:../../../paycheck/" + id);
         return response;
     }
 }
