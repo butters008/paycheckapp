@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -87,10 +88,20 @@ public class PaycheckController {
             log.debug("No check!");
         }else{
             paycheck = paycheckDAO.findById(id);
-            List<PaycheckTransaction> paycheckTransactionList =  paycheckTransactionDAO.findAllByPaycheckId(paycheck);;
+            List<PaycheckTransaction> paycheckTransactionList =  paycheckTransactionDAO.findAllByPaycheckId(paycheck);
+            Float transactionTotalAmount = 100.0F;
+
+            List<Float> tList = paycheckTransactionList.stream().map(p -> p.getTransactionId().getAmount()).collect(Collectors.toList());
+            log.debug("tList " + tList);
+            for(int i = 0; i < tList.size(); i++){
+                transactionTotalAmount += tList.get(i);
+            }
+            log.debug("tList " + transactionTotalAmount);
 //            paycheckTransactionList =
             log.debug(paycheckTransactionList.toString());
             response.addObject("transactionList", paycheckTransactionList);
+//            response.addObject("transactionTotalAmount", tList);
+            response.addObject("transactionTotalAmount", transactionTotalAmount);
         }
 
 
