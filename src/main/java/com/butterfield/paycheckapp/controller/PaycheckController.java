@@ -1,7 +1,11 @@
 package com.butterfield.paycheckapp.controller;
 
 import com.butterfield.paycheckapp.database.dao.PaycheckDAO;
+import com.butterfield.paycheckapp.database.dao.PaycheckTransactionDAO;
+import com.butterfield.paycheckapp.database.dao.TransactionDAO;
 import com.butterfield.paycheckapp.database.entity.Paycheck;
+import com.butterfield.paycheckapp.database.entity.PaycheckTransaction;
+import com.butterfield.paycheckapp.database.entity.Transaction;
 import com.butterfield.paycheckapp.formBean.PaycheckFormBean;
 import com.butterfield.paycheckapp.service.PaycheckService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -21,6 +26,12 @@ public class PaycheckController {
 
     @Autowired
     private PaycheckDAO paycheckDAO;
+
+    @Autowired
+    private TransactionDAO transactionDAO;
+
+    @Autowired
+    private PaycheckTransactionDAO paycheckTransactionDAO;
 
     @Autowired
     private PaycheckService paycheckService = new PaycheckService();
@@ -37,7 +48,7 @@ public class PaycheckController {
         ModelAndView response = new ModelAndView();
 
         List<Paycheck> paychecks = paycheckDAO.findAll();
-        System.out.print(paychecks.stream().toList());
+//        System.out.print(paychecks.stream().toList());
         response.addObject("paycheckList", paychecks);
 
         response.setViewName("paycheck/paycheckList");
@@ -77,7 +88,22 @@ public class PaycheckController {
             log.debug("No check!");
         }else{
             paycheck = paycheckDAO.findById(id);
+            List<PaycheckTransaction> paycheckTransactionList =  paycheckTransactionDAO.findAllByPaycheckId(paycheck);
+            Float transactionTotalAmount = 100.0F;
+
+            List<Float> tList = paycheckTransactionList.stream().map(p -> p.getTransactionId().getAmount()).collect(Collectors.toList());
+            log.debug("tList " + tList);
+            for(int i = 0; i < tList.size(); i++){
+                transactionTotalAmount += tList.get(i);
+            }
+            log.debug("tList " + transactionTotalAmount);
+//            paycheckTransactionList =
+            log.debug(paycheckTransactionList.toString());
+            response.addObject("transactionList", paycheckTransactionList);
+//            response.addObject("transactionTotalAmount", tList);
+            response.addObject("transactionTotalAmount", transactionTotalAmount);
         }
+
 
         response.addObject("paycheck", paycheck);
         response.setViewName("paycheck/paycheckInfo");

@@ -6,8 +6,10 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.Set;
 //import org.springframework.data.annotation.Id;
 
 @Data
@@ -36,4 +38,9 @@ public class Paycheck {
 
     @Column(name = "days_between_check")
     private Integer daysBetweenCheck;
+
+    @OneToMany(mappedBy = "paycheckId", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Set<PaycheckTransaction> paycheckTransactions;
+
 }

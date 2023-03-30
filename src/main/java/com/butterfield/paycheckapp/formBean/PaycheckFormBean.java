@@ -14,7 +14,6 @@ import java.time.LocalDate;
 public class PaycheckFormBean {
     private Integer id;
 
-    //    @NotEmpty(message = "Cannot be blank")
     private String paycheckName;
 
     private Float paycheckAmount;
