@@ -35,6 +35,9 @@ public class Transaction {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "type")
+    private String type;
+
     @OneToMany(mappedBy = "transactionId", fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<PaycheckTransaction> paycheckTransactions;

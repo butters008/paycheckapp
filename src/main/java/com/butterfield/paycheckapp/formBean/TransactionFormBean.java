@@ -21,4 +21,6 @@ public class TransactionFormBean {
     private String recurring;
 
     private String note;
+
+    private String type;
 }

@@ -8,6 +8,7 @@ import com.butterfield.paycheckapp.database.entity.PaycheckTransaction;
 import com.butterfield.paycheckapp.database.entity.Transaction;
 import com.butterfield.paycheckapp.formBean.PaycheckFormBean;
 import com.butterfield.paycheckapp.service.PaycheckService;
+import com.butterfield.paycheckapp.service.TransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,10 @@ public class PaycheckController {
     private PaycheckTransactionDAO paycheckTransactionDAO;
 
     @Autowired
-    private PaycheckService paycheckService = new PaycheckService();
+    private PaycheckService paycheckService;
+
+    @Autowired
+    private TransactionService transactionService;
 
     @RequestMapping(value="paycheck/paycheck", method = RequestMethod.GET)
     public ModelAndView emptyPaycheckPage() throws Exception {
@@ -89,19 +93,17 @@ public class PaycheckController {
         }else{
             paycheck = paycheckDAO.findById(id);
             List<PaycheckTransaction> paycheckTransactionList =  paycheckTransactionDAO.findAllByPaycheckId(paycheck);
-            Float transactionTotalAmount = 100.0F;
+            List<Transaction> tList = paycheckTransactionList.stream().map(p -> p.getTransactionId()).collect(Collectors.toList());
 
-            List<Float> tList = paycheckTransactionList.stream().map(p -> p.getTransactionId().getAmount()).collect(Collectors.toList());
-            log.debug("tList " + tList);
-            for(int i = 0; i < tList.size(); i++){
-                transactionTotalAmount += tList.get(i);
-            }
-            log.debug("tList " + transactionTotalAmount);
-//            paycheckTransactionList =
-            log.debug(paycheckTransactionList.toString());
+            // Getting the total amount for Expense and Income for page display
+            Float expenseTotalAmount = 0F;
+            Float incomeTotalAmount = 0F;
+            expenseTotalAmount = transactionService.getExpenseTotal(tList);
+            incomeTotalAmount = transactionService.getIncomeTotal(tList) + paycheck.getPaycheckAmount();
+
             response.addObject("transactionList", paycheckTransactionList);
-//            response.addObject("transactionTotalAmount", tList);
-            response.addObject("transactionTotalAmount", transactionTotalAmount);
+            response.addObject("incomeTotalAmount", incomeTotalAmount);
+            response.addObject("expenseTotalAmount", expenseTotalAmount);
         }
 
 
