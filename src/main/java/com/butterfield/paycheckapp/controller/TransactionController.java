@@ -7,6 +7,8 @@ import com.butterfield.paycheckapp.database.entity.Paycheck;
 import com.butterfield.paycheckapp.database.entity.PaycheckTransaction;
 import com.butterfield.paycheckapp.database.entity.Transaction;
 import com.butterfield.paycheckapp.formBean.TransactionFormBean;
+import com.butterfield.paycheckapp.service.PaycheckTransactionService;
+import com.butterfield.paycheckapp.service.TransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,50 +31,34 @@ public class TransactionController {
     @Autowired
     private PaycheckTransactionDAO paycheckTransactionDAO;
 
+    @Autowired
+    private TransactionService transactionService;
+
+    @Autowired
+    private PaycheckTransactionService paycheckTransactionService;
+
     @RequestMapping(value="paycheck/{aID}/transaction/submit", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView submitTransaction(@Valid TransactionFormBean form, @PathVariable("aID") Integer id) throws Exception {
         ModelAndView response = new ModelAndView();
-
         Transaction transaction = null;
-        log.debug("Incoming Form " + form.toString());
 
         if (transactionDAO.findById(form.getId()) == null) {
-
-            log.debug("Creating a new transaction");
-
             //Create new transaction and new paycheck_transaction
             transaction = new Transaction();
-            transaction.setName(form.getName());
-            transaction.setAmount(form.getAmount());
-            transaction.setDate(form.getDate());
-            transaction.setRecurring(form.getRecurring());
-            transaction.setNote(form.getNote());
+            transaction = transactionService.saveTransaction(form, transaction);
             Paycheck paycheck = paycheckDAO.findById(id);
-            PaycheckTransaction paycheckTransaction = new PaycheckTransaction();
-            paycheckTransaction.setPaycheckId(paycheck);
-            paycheckTransaction.setTransactionId(transaction);
+            PaycheckTransaction paycheckTransaction = paycheckTransactionService.savePaycheckTransaction(paycheck, transaction);
+
+            // Saving to DB
             transactionDAO.save(transaction);
-            log.debug("transaction "+ transaction);
-            log.debug("paycheck "+ paycheck);
-            log.debug("paycheckTransaction "+ paycheckTransaction);
             paycheckTransactionDAO.save(paycheckTransaction);
         }
         else {
-
-            log.debug("Updating a transaction");
-
             //Update the transaction
             transaction = transactionDAO.findById(form.getId());
-            transaction.setName(form.getName());
-            transaction.setAmount(form.getAmount());
-            transaction.setDate(form.getDate());
-            transaction.setRecurring(form.getRecurring());
-            transaction.setNote(form.getNote());
+            transaction = transactionService.saveTransaction(form, transaction);
             transactionDAO.save(transaction);
         }
-
-
-
         response.setViewName("redirect:../../../paycheck/" + id);
         return response;
     }

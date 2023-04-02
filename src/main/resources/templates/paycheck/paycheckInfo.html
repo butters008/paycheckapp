@@ -64,6 +64,10 @@ more of a gold-foiling.
   <h3>Transaction Information</h3>
   <form th:action="@{{id}/transaction/submit (id = ${paycheck.id})}" method="post">
 <!--    <input type="text" name="aid"  th:value="${paycheck.id}">-->
+    <label for="income">Income</label>
+    <input type="radio" name="type" id="income" value="income">
+    <label for="expense">Expense</label>
+    <input type="radio" name="type" id="expense" value="expense">
     <label for="transactionName">Transaction Name</label>
     <input type="text" name="name" id="transactionName" >
     <label for="transactionAmount">Transaction Amount</label>
@@ -82,17 +86,18 @@ more of a gold-foiling.
         <thead>
         <tr>
             <th>Total Expense</th>
-            <th th:text="${transactionTotalAmount}"/>
+            <th th:text="${expenseTotalAmount}"/>
         </tr>
         <tr>
             <th>Total Income</th>
-            <th></th>
+            <th th:text="${incomeTotalAmount}"/>
         </tr>
         </thead>
     </table>
     <table>
         <tbody>
             <tr th:each="transaction: ${transactionList}">
+                <td th:text="${transaction.getTransactionId().getType()}"/>
                 <td th:text="${transaction.getTransactionId().getName()}"/>
                 <td th:text="${transaction.getTransactionId().getAmount()}"/>
                 <td th:text="${transaction.getTransactionId().getDate()}"/>
